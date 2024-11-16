@@ -13,9 +13,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { filterOptions, sortOptions } from "@/config";
 import { AuthContext } from "@/context/auth-context";
 import { StudentContext } from "@/context/student-context";
-import {
-  fetchStudentViewCourseListService,
-} from "@/services";
 import { ArrowUpDownIcon } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -74,41 +71,6 @@ function StudentViewCoursesPage() {
     sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
   }
 
-  async function fetchAllStudentViewCourses(filters, sort) {
-    const query = new URLSearchParams({
-      ...filters,
-      sortBy: sort,
-    });
-    const response = await fetchStudentViewCourseListService(query);
-    if (response?.success) {
-      setStudentViewCoursesList(response?.data);
-      setLoadingState(false);
-    }
-  }
-
-
-  useEffect(() => {
-    const buildQueryStringForFilters = createSearchParamsHelper(filters);
-    setSearchParams(new URLSearchParams(buildQueryStringForFilters));
-  }, [filters]);
-
-  useEffect(() => {
-    setSort("price-lowtohigh");
-    setFilters(JSON.parse(sessionStorage.getItem("filters")) || {});
-  }, []);
-
-  useEffect(() => {
-    if (filters !== null && sort !== null)
-      fetchAllStudentViewCourses(filters, sort);
-  }, [filters, sort]);
-
-  useEffect(() => {
-    return () => {
-      sessionStorage.removeItem("filters");
-    };
-  }, []);
-
-  console.log(loadingState, "loadingState");
 
   return (
     <div className="container mx-auto p-4">
